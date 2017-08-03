@@ -122,7 +122,8 @@ public class MasterSelectController : MonoBehaviour {
     {
     	if(Input.GetKey(KeyCode.LeftShift))
     	{
-            if(Input.GetKeyDown(KeyCode.Alpha1))
+            if(Input.GetKey
+                (KeyCode.Alpha1))
             {
                 quickLoadEnv = 0;
             }

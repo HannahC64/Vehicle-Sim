@@ -10,6 +10,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
+// my code
+using System;
+using System.IO;
+//using UnityEditor;
+
 public struct FullDataFrame
 {
     public float time;
@@ -32,8 +37,22 @@ public struct FullDataFrame
     public float triggeredEvent2TimeStamp;
     public float triggeredEvent3TimeStamp;
 
+    public float positionX;
+    public float positionY;
+    public float positionZ;
+    public float rotationX;
+    public float rotationY;
+    public float rotationZ;
+    public float rotationW;
+    public float throttle;
+    public bool leftPaddle;
+    public bool rightPaddle;
+    public float localRotationX;
+    public float frontLocalRotationY;
+
     public string ToCSV()
     {
+        /*
         string data = string.Format("EMSSetSpeed, {1:F4}, {0}\n" +
                 "EngineSpeed, {2:F4}, {0}\n" +
                 "GearPosActual, {3:N}, {0}\n" +
@@ -49,7 +68,9 @@ public struct FullDataFrame
                 "WheelSpeedReL, {13:F4}, {0}\n" +
                 "WheelSpeedReR, {14:F4}, {0}\n" +
                 "YawRate, {15:F4}, {0}\n", time, cruiseSpeed, rpm, gearPosActual, gearPosTarget, accelleratorPos, deceleratorPos, rollRate, steeringWheelAngle, vehicleSpeed, vehicleSpeedOverGround, wheelSpeedFL, wheelSpeedFR, wheelSpeedRL, wheelSpeedRR, yawRate);
-
+        */
+        string data = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12}", time, positionX, positionY, positionZ, rotationX, rotationY, rotationZ, rotationW, throttle, leftPaddle, rightPaddle, localRotationX, frontLocalRotationY);        
+        
         //TODO: handle this better
         if (triggeredEvent1TimeStamp > 0f)
         {
@@ -124,13 +145,62 @@ public class CANDataCollector : MonoBehaviour {
     private float triggerTimeStamp2 = 0f;
     private float triggerTimeStamp3 = 0f;
 
+    // my code
+    private List<GameObject> traffic;
+    private float startOfScene;
+
     void Awake() {
 		rb = GetComponent<Rigidbody>();
 		vehicleController = GetComponent<VehicleController>();
         dataStream = DataStreamServer.Instance;
         lastYaw = transform.localRotation.eulerAngles.y;
         lastRoll = transform.localRotation.eulerAngles.z;
-	}
+        DriverCamera driverCam = GetComponent<DriverCamera>();
+
+        // my code
+        //string template = "Assets/Scripts/Javier/Recordings/recording{0}.txt";
+        //string template = "JavierResources/Recordings/recording{0}.txt";
+
+        traffic = new List<GameObject>();
+        startOfScene = Time.time;
+
+
+        string template = "/recording{0}.txt";
+        //Debug.Log(Application.persistentDataPath);
+        int i = 1;
+        //var myprevcar2 = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/JavierResourcces/Racing/Racing_Car_05/Prefabs/racing_car_05.prefab"); //, typeof(GameObject));
+
+        //var myprevcar2 = (GameObject)Resources.Load("JavierResourcces/Racing/Racing_Car_05/Prefabs/racing_car_05", typeof(GameObject));
+        //var mycar2 = Instantiate(myprevcar2, new Vector3(898, 11, 370), Quaternion.identity);
+        //if (myprevcar2 == null)
+        //Debug.Log("didn't find the car model");
+        //mycar2.AddComponent<CSVFileReader>();
+
+        var myprevcar = (GameObject)Resources.Load("JavierResourcces/Racing/Racing_Car_05/Prefabs/racing_car_05", typeof(GameObject));
+        while (File.Exists(Application.persistentDataPath + string.Format(template, i)))
+        {
+            //GameObject mycar = (GameObject)AssetDatabase.LoadAssetAtPath("Assets/Scripts/Javier/Racing/Racing_Car_05/Prefabs/racing_car_05.prefab", typeof(GameObject));
+            //var mycar = Instantiate((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Scripts/Javier/Racing/Racing_Car_05/Prefabs/racing_car_05.prefab", typeof(GameObject)), new Vector3(-100, -100, -100), Quaternion.identity);
+            //Debug.Log("found a file");
+            var mycar = Instantiate(myprevcar, new Vector3(-100 + i*7, -100, -100), Quaternion.identity);
+            if (mycar == null)
+                Debug.Log("car not instantiated");
+            mycar.AddComponent<CSVFileReader>();
+            
+            //mycar.GetComponent<CSVFileReader>().csvFile = (TextAsset)AssetDatabase.LoadAssetAtPath(string.Format(template, i), typeof(TextAsset));
+            //mycar.GetComponent<CSVFileReader>().csvFile = (TextAsset)Resources.Load(string.Format(template, i), typeof(TextAsset));
+            mycar.GetComponent<CSVFileReader>().csvFile = File.Open(Application.persistentDataPath + string.Format(template, i), FileMode.Open);
+            if (mycar.GetComponent<CSVFileReader>().csvFile == null)
+                Debug.Log("file not opened correctly");
+            // add script lights if not already included
+            traffic.Add(mycar);
+            //Debug.Log("no problem here");
+            i++;
+        }
+ 
+
+
+    }
 
     private void OnEnable()
     {
@@ -164,7 +234,81 @@ public class CANDataCollector : MonoBehaviour {
         triggerTimeStamp3 = Time.time;
     }
 
+    private string generateFileName()
+    {
+        //string template = "Assets/Scripts/Javier/Recordings/recording{0}.txt";
+        //string template = "AssetsTest2/Resources/JavierResources/Recordings/recording{0}.txt";
+        string template = "/recording{0}.txt";
+        int i = 1;
+        while (File.Exists(Application.persistentDataPath + string.Format(template, i)))
+        {
+            i++;
+        }
+        return Application.persistentDataPath + string.Format(template, i);
+    }
+
+    private bool deletePrevRecording()
+    {
+        string template = "/recording{0}.txt";
+        int i = 1;
+        while (File.Exists(Application.persistentDataPath + string.Format(template, i)))
+        {
+            i++;
+        }
+        if (i == 1)
+            return false;
+        Destroy(traffic[i - 2], 0.1f);
+        File.Delete(Application.persistentDataPath + string.Format(template, i - 1));
+        return true;
+    }
+
+    private void deleteAllRecordings()
+    {
+        while (deletePrevRecording()) { }
+    }
+
+    private StreamWriter writer;
+    private bool recording = false;
+    private bool leftP;
+    private bool rightP;
+
+    private void OnGUI()
+    {
+        if(recording)
+            GUI.Label(new Rect(Screen.width - 100, Screen.height - 50, 100, 100), "RECORDING");
+        //GUI.Label(new Rect(Screen.width - 100, 100, 100, 100), string.Format("{0}",Time.time));
+        if(GUI.Button(new Rect(Screen.width - 200, 50, 175, 30), "Delete Prev Recording"))
+        {
+            deletePrevRecording();
+        }
+        if (GUI.Button(new Rect(Screen.width - 200, 90, 175, 30), "Delete All Recordings"))
+        {
+            deleteAllRecordings();
+        }
+
+    }
+
     void Update() {
+
+        if (Input.GetButtonDown("rightRed"))
+        {
+            if (recording)
+            {
+                recording = false;
+                writer.Close();
+            }
+            else
+            {
+                recording = true;
+                string path = generateFileName();
+                writer = File.CreateText(path);
+                //Debug.Log("recording");
+            }
+        }
+
+        leftP = Input.GetButtonDown("LeftPaddle");
+        rightP = Input.GetButtonDown("RightPaddle");
+        /*
         float yaw = (transform.localRotation.eulerAngles.y - lastYaw) / Time.deltaTime;
         float roll = (transform.localRotation.eulerAngles.z - lastRoll) / Time.deltaTime;
         lastRoll = transform.localRotation.eulerAngles.z;
@@ -243,6 +387,73 @@ public class CANDataCollector : MonoBehaviour {
 
 
 
-        dataStream.SendAsText(frame);
+        dataStream.SendAsText(frame);*/
+
+    }
+
+
+
+
+
+    private void FixedUpdate()
+    {
+        //float time = Time.time;
+        //time -= startOfScene;
+
+        float time = Time.timeSinceLevelLoad;
+
+
+        // right paddle is button 4
+        //left paddle is button 5
+        // right red button is 6
+        //btter if these are in update()
+
+        //StreamWriter writer = new StreamWriter(path, true);
+
+
+
+        //vehicleController.WheelFL.transform.rotation.x,
+
+
+        FullDataFrame frame = new FullDataFrame()
+        {
+            time = time,
+            cruiseSpeed = 0f,
+            rpm = 0f,
+            gearPosActual = 0f,
+            gearPosTarget = vehicleController.Gear,
+            accelleratorPos = 0f,
+            deceleratorPos = 0f,
+            rollRate = 0f,
+            steeringWheelAngle = 0f,
+            vehicleSpeed = 0f,
+            vehicleSpeedOverGround = 0f,
+            wheelSpeedFL = vehicleController.WheelFL.rpm * 60,
+            wheelSpeedFR = vehicleController.WheelFR.rpm * 60,
+            wheelSpeedRL = vehicleController.WheelRL.rpm * 60,
+            wheelSpeedRR = vehicleController.WheelRR.rpm * 60,
+            yawRate = 0f,
+            triggeredEvent1TimeStamp = 0f,
+            positionX = vehicleController.transform.position.x,
+            positionY = vehicleController.transform.position.y,
+            positionZ = vehicleController.transform.position.z,
+            rotationX = vehicleController.transform.rotation.x,
+            rotationY = vehicleController.transform.rotation.y,
+            rotationZ = vehicleController.transform.rotation.z,
+            rotationW = vehicleController.transform.rotation.w,
+            throttle = vehicleController.accellInput,
+            leftPaddle = leftP,
+            rightPaddle = rightP,
+            localRotationX = vehicleController.WheelFL.transform.localEulerAngles.x,
+            frontLocalRotationY = vehicleController.WheelFL.transform.localEulerAngles.y
+        };
+
+        if (recording)
+        {
+            writer.WriteLine(frame.ToCSV());
+            //AssetDatabase.ImportAsset(path, ImportAssetOptions.Default);
+        }
+
+        //dataStream.SendAsText(frame);
     }
 }
