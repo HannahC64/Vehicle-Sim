@@ -1,0 +1,258 @@
+fileFormatVersion: 2
+guid: b27ea5254d1a1804c8a5af55bb679f1b
+timeCreated: 1497270646
+licenseType: Store
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: body_ext
+    100002: boot_ext
+    100004: brake_Caliper_misc
+    100006: brake_Caliper_misc 1
+    100008: brake_Caliper_misc 2
+    100010: brake_Caliper_misc 3
+    100012: brakeLights
+    100014: car
+    100016: chassis_ext
+    100018: collider
+    100020: door_L
+    100022: door_R
+    100024: exhaust_ext
+    100026: front
+    100028: front_glows
+    100030: frontBumper_ext
+    100032: frontLightsOn
+    100034: headLightLens_windows
+    100036: hood_ext
+    100038: interior_cab
+    100040: interior_ext
+    100042: Lens
+    100044: Lens 1
+    100046: lens_FL01
+    100048: lens_FL01 1
+    100050: lens_FL02
+    100052: lens_FL02 1
+    100054: lens_FL03
+    100056: lens_FL03 1
+    100058: lens_FR01
+    100060: lens_FR02
+    100062: lens_FR02 1
+    100064: lens_FR03
+    100066: lens_FR03 1
+    100068: Lights
+    100070: //RootNode
+    100072: rear
+    100074: rearBumper_ext
+    100076: tailLight
+    100078: tailLight_Lens
+    100080: wheel
+    100082: wheel 1
+    100084: wheel 2
+    100086: wheel 3
+    100088: Wheel_FL
+    100090: Wheel_FR
+    100092: Wheel_RL
+    100094: Wheel_RR
+    100096: wheels
+    100098: windows
+    400000: body_ext
+    400002: boot_ext
+    400004: brake_Caliper_misc
+    400006: brake_Caliper_misc 1
+    400008: brake_Caliper_misc 2
+    400010: brake_Caliper_misc 3
+    400012: brakeLights
+    400014: car
+    400016: chassis_ext
+    400018: collider
+    400020: door_L
+    400022: door_R
+    400024: exhaust_ext
+    400026: front
+    400028: front_glows
+    400030: frontBumper_ext
+    400032: frontLightsOn
+    400034: headLightLens_windows
+    400036: hood_ext
+    400038: interior_cab
+    400040: interior_ext
+    400042: Lens
+    400044: Lens 1
+    400046: lens_FL01
+    400048: lens_FL01 1
+    400050: lens_FL02
+    400052: lens_FL02 1
+    400054: lens_FL03
+    400056: lens_FL03 1
+    400058: lens_FR01
+    400060: lens_FR02
+    400062: lens_FR02 1
+    400064: lens_FR03
+    400066: lens_FR03 1
+    400068: Lights
+    400070: //RootNode
+    400072: rear
+    400074: rearBumper_ext
+    400076: tailLight
+    400078: tailLight_Lens
+    400080: wheel
+    400082: wheel 1
+    400084: wheel 2
+    400086: wheel 3
+    400088: Wheel_FL
+    400090: Wheel_FR
+    400092: Wheel_RL
+    400094: Wheel_RR
+    400096: wheels
+    400098: windows
+    2300000: body_ext
+    2300002: boot_ext
+    2300004: brake_Caliper_misc
+    2300006: brake_Caliper_misc 1
+    2300008: brake_Caliper_misc 2
+    2300010: brake_Caliper_misc 3
+    2300012: brakeLights
+    2300014: chassis_ext
+    2300016: collider
+    2300018: door_L
+    2300020: door_R
+    2300022: exhaust_ext
+    2300024: front_glows
+    2300026: frontBumper_ext
+    2300028: frontLightsOn
+    2300030: headLightLens_windows
+    2300032: hood_ext
+    2300034: interior_cab
+    2300036: interior_ext
+    2300038: rearBumper_ext
+    2300040: tailLight
+    2300042: tailLight_Lens
+    2300044: wheel
+    2300046: wheel 1
+    2300048: wheel 2
+    2300050: wheel 3
+    2300052: windows
+    3300000: body_ext
+    3300002: boot_ext
+    3300004: brake_Caliper_misc
+    3300006: brake_Caliper_misc 1
+    3300008: brake_Caliper_misc 2
+    3300010: brake_Caliper_misc 3
+    3300012: brakeLights
+    3300014: chassis_ext
+    3300016: collider
+    3300018: door_L
+    3300020: door_R
+    3300022: exhaust_ext
+    3300024: front_glows
+    3300026: frontBumper_ext
+    3300028: frontLightsOn
+    3300030: headLightLens_windows
+    3300032: hood_ext
+    3300034: interior_cab
+    3300036: interior_ext
+    3300038: rearBumper_ext
+    3300040: tailLight
+    3300042: tailLight_Lens
+    3300044: wheel
+    3300046: wheel 1
+    3300048: wheel 2
+    3300050: wheel 3
+    3300052: windows
+    4300000: brake_Caliper_misc
+    4300002: wheel
+    4300004: brake_Caliper_misc
+    4300006: wheel
+    4300008: brake_Caliper_misc
+    4300010: wheel
+    4300012: brake_Caliper_misc
+    4300014: wheel
+    4300016: front_glows
+    4300018: frontLightsOn
+    4300020: brakeLights
+    4300022: tailLight
+    4300024: rearBumper_ext
+    4300026: interior_ext
+    4300028: interior_cab
+    4300030: hood_ext
+    4300032: headLightLens_windows
+    4300034: windows
+    4300036: frontBumper_ext
+    4300038: exhaust_ext
+    4300040: door_R
+    4300042: door_L
+    4300044: chassis_ext
+    4300046: tailLight_Lens
+    4300048: boot_ext
+    4300050: body_ext
+    4300052: collider
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
