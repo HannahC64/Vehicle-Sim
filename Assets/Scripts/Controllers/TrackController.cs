@@ -184,7 +184,6 @@ public class TrackController : UnitySingleton<TrackController> {
 
     public void AddInfraction(DrivingInfraction d)
     {
-
         infractionsAlertTimer = Time.time;
         if(infractionsAlertSound != null)
             AudioController.Instance.PlayClip(infractionsAlertSound);
@@ -250,7 +249,7 @@ public class TrackController : UnitySingleton<TrackController> {
         try
         {
            var path = Application.temporaryCachePath + System.IO.Path.DirectorySeparatorChar + id + ".jpg";
-           Debug.Log(path);
+           //Debug.Log(path);
            ThreadPool.QueueUserWorkItem(new WaitCallback(SaveImageThreaded), new ScreenshotSaveTaskInfo()
            {
                imageBytes = bytes,
@@ -373,7 +372,7 @@ public class TrackController : UnitySingleton<TrackController> {
             {
                 data[i] = new LightmapData()
                 {
-                    lightmapLight = Resources.Load<Texture2D>("CarSelect_Lightmaps/LightmapFar-" + i)
+                    lightmapColor = Resources.Load<Texture2D>("CarSelect_Lightmaps/LightmapFar-" + i)
                 };
             }
             LightmapSettings.lightmapsMode = LightmapsMode.NonDirectional;
@@ -666,7 +665,8 @@ public class TrackController : UnitySingleton<TrackController> {
 
     public void EndScene()
     {
-        //adminScreen.isShowingEndScene = true;
+        //adminScreen.isShowingEndScene = true; 
+        Debug.Log("end scene is called");
         driveAdmin.EndScene();
     }
 
@@ -698,6 +698,7 @@ public class TrackController : UnitySingleton<TrackController> {
         
         if (AdminSettings.Instance.displayType == AdminScreen.DisplayType.PARABOLIC)
         {
+
             GUI.matrix = Matrix4x4.Scale(new Vector3(Screen.height / 1080f, Screen.height / 1080f, 1f));
         }
         else

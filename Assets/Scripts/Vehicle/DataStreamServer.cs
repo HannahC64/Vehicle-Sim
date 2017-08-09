@@ -25,7 +25,7 @@ public class ConnectionData
 public class DataStreamServer : PersistentUnitySingleton<DataStreamServer> {
 
     public const int PORT = 9001;
-    public const int ALTPORT = 9000;
+    public const int ALTPORT = 9025;
     public const int EVENTPORT = 9002;
     private static string recievedData;
     private static int messageLen = 4 + (4 * 15);

@@ -2,23 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * This script should be attached to the Audio Controller in the Loader scene. 
+ * The clip that is played (in this case indicators) should be attached to the
+ * AudioClip section of the audio source.
+ */
+
 public class IndicatorsAudio : MonoBehaviour {
 
     private AudioSource audioSource;
     private bool isIndicating = false;
 
-	// Use this for initialization
 	void Start () {
-        //audioSource = gameObject.GetComponent<AudioSource>();
-        //audioSource.clip = Resources.Load("Assets/Scripts/Javier/indicatorSound") as AudioClip;
-        //audioSource.loop = true;
         audioSource = gameObject.GetComponent<AudioSource>();
-
     }
 
     // Update is called once per frame
     void Update()
     {
+        /*
+         * Changes under Edit/Project Settings/Input:
+         * - RightPaddle is set to joystick button 4
+         * - LeftPaddle is set to joystick button 5
+         */
+
         bool leftP = Input.GetButtonDown("LeftPaddle");
         bool rightP = Input.GetButtonDown("RightPaddle");
 

@@ -13,7 +13,6 @@ using System.Runtime.InteropServices;
 // my code
 using System;
 using System.IO;
-//using UnityEditor;
 
 public struct FullDataFrame
 {
@@ -176,7 +175,7 @@ public class CANDataCollector : MonoBehaviour {
         //Debug.Log("didn't find the car model");
         //mycar2.AddComponent<CSVFileReader>();
 
-        var myprevcar = (GameObject)Resources.Load("JavierResourcces/Racing/Racing_Car_05/Prefabs/racing_car_05", typeof(GameObject));
+        var myprevcar = (GameObject)Resources.Load("JavierResources/Racing/Racing_Car_05/Prefabs/racing_car_05", typeof(GameObject));
         while (File.Exists(Application.persistentDataPath + string.Format(template, i)))
         {
             //GameObject mycar = (GameObject)AssetDatabase.LoadAssetAtPath("Assets/Scripts/Javier/Racing/Racing_Car_05/Prefabs/racing_car_05.prefab", typeof(GameObject));
@@ -274,9 +273,8 @@ public class CANDataCollector : MonoBehaviour {
 
     private void OnGUI()
     {
-        if(recording)
+        if (recording)
             GUI.Label(new Rect(Screen.width - 100, Screen.height - 50, 100, 100), "RECORDING");
-        //GUI.Label(new Rect(Screen.width - 100, 100, 100, 100), string.Format("{0}",Time.time));
         if(GUI.Button(new Rect(Screen.width - 200, 50, 175, 30), "Delete Prev Recording"))
         {
             deletePrevRecording();
@@ -285,7 +283,7 @@ public class CANDataCollector : MonoBehaviour {
         {
             deleteAllRecordings();
         }
-
+        //GUI.Label(new Rect(Screen.width - 100, 100, 100, 100), string.Format("{0}",Time.time));
     }
 
     void Update() {

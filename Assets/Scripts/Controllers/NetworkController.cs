@@ -23,10 +23,16 @@ public class NetworkSettings
         //hostIp = "127.0.0.1";
         //clientIp = "192.168.178.29";
         //altClientIP = "127.0.0.1";
-        hostIp = "192.168.16.129";
-        clientIp = "192.168.16.128";
+
+        //hostIp = "192.168.16.129";
+        //clientIp = "192.168.16.128";
+        //eventClientIP = "127.0.0.1";
+        //altClientIP = "192.168.16.85";
+
+        hostIp = "127.0.0.1";
+        clientIp = "127.0.0.1";
         eventClientIP = "127.0.0.1";
-        altClientIP = "192.168.16.85";
+        altClientIP = "127.0.0.1";
 
     }
 

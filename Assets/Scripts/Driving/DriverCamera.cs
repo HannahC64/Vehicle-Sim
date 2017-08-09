@@ -157,6 +157,7 @@ public class DriverCamera : MonoBehaviour {
     public void Init(Transform cameraPos)
     {
         fixTo.fixTo = cameraPos;
+        //smoothFollow.targetObject = cameraPos;
     }
 
     public void ViewInside()
