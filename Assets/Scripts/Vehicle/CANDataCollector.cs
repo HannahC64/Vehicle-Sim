@@ -10,7 +10,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-// my code
 using System;
 using System.IO;
 
@@ -36,6 +35,7 @@ public struct FullDataFrame
     public float triggeredEvent2TimeStamp;
     public float triggeredEvent3TimeStamp;
 
+    // added variables JEC
     public float positionX;
     public float positionY;
     public float positionZ;
@@ -44,14 +44,12 @@ public struct FullDataFrame
     public float rotationZ;
     public float rotationW;
     public float throttle;
-    public bool leftPaddle;
-    public bool rightPaddle;
-    public float localRotationX;
-    public float frontLocalRotationY;
+    public int leftPaddle;
+    public int rightPaddle;
 
     public string ToCSV()
     {
-        /*
+        /* This was the old format JEC
         string data = string.Format("EMSSetSpeed, {1:F4}, {0}\n" +
                 "EngineSpeed, {2:F4}, {0}\n" +
                 "GearPosActual, {3:N}, {0}\n" +
@@ -68,7 +66,7 @@ public struct FullDataFrame
                 "WheelSpeedReR, {14:F4}, {0}\n" +
                 "YawRate, {15:F4}, {0}\n", time, cruiseSpeed, rpm, gearPosActual, gearPosTarget, accelleratorPos, deceleratorPos, rollRate, steeringWheelAngle, vehicleSpeed, vehicleSpeedOverGround, wheelSpeedFL, wheelSpeedFR, wheelSpeedRL, wheelSpeedRR, yawRate);
         */
-        string data = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12}", time, positionX, positionY, positionZ, rotationX, rotationY, rotationZ, rotationW, throttle, leftPaddle, rightPaddle, localRotationX, frontLocalRotationY);        
+        string data = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}", time, positionX, positionY, positionZ, rotationX, rotationY, rotationZ, rotationW, throttle, leftPaddle, rightPaddle);        
         
         //TODO: handle this better
         if (triggeredEvent1TimeStamp > 0f)
@@ -87,7 +85,6 @@ public struct FullDataFrame
         }
 
         return data;
-          
     }
 
     public string ToICCSV()
@@ -144,9 +141,8 @@ public class CANDataCollector : MonoBehaviour {
     private float triggerTimeStamp2 = 0f;
     private float triggerTimeStamp3 = 0f;
 
-    // my code
+    // keeps track of all the cars from recordings JEC
     private List<GameObject> traffic;
-    private float startOfScene;
 
     void Awake() {
 		rb = GetComponent<Rigidbody>();
@@ -156,49 +152,32 @@ public class CANDataCollector : MonoBehaviour {
         lastRoll = transform.localRotation.eulerAngles.z;
         DriverCamera driverCam = GetComponent<DriverCamera>();
 
-        // my code
-        //string template = "Assets/Scripts/Javier/Recordings/recording{0}.txt";
-        //string template = "JavierResources/Recordings/recording{0}.txt";
-
+        /*
+         * This part of the code takes care of instantiating a car
+         * for each recording that exists. JEC
+         */
         traffic = new List<GameObject>();
-        startOfScene = Time.time;
-
-
         string template = "/recording{0}.txt";
-        //Debug.Log(Application.persistentDataPath);
         int i = 1;
-        //var myprevcar2 = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/JavierResourcces/Racing/Racing_Car_05/Prefabs/racing_car_05.prefab"); //, typeof(GameObject));
 
-        //var myprevcar2 = (GameObject)Resources.Load("JavierResourcces/Racing/Racing_Car_05/Prefabs/racing_car_05", typeof(GameObject));
-        //var mycar2 = Instantiate(myprevcar2, new Vector3(898, 11, 370), Quaternion.identity);
-        //if (myprevcar2 == null)
-        //Debug.Log("didn't find the car model");
-        //mycar2.AddComponent<CSVFileReader>();
-
+        /*
+         * As of right now, all of the cars use this prefab. 
+         * It would be useful to create an array of different
+         * prefabs to increase the diversity of models in the scene JEC
+         */
         var myprevcar = (GameObject)Resources.Load("JavierResources/Racing/Racing_Car_05/Prefabs/racing_car_05", typeof(GameObject));
+        if (myprevcar == null)
+            Debug.Log("Car prefab wasn't found");
         while (File.Exists(Application.persistentDataPath + string.Format(template, i)))
         {
-            //GameObject mycar = (GameObject)AssetDatabase.LoadAssetAtPath("Assets/Scripts/Javier/Racing/Racing_Car_05/Prefabs/racing_car_05.prefab", typeof(GameObject));
-            //var mycar = Instantiate((GameObject)AssetDatabase.LoadAssetAtPath("Assets/Scripts/Javier/Racing/Racing_Car_05/Prefabs/racing_car_05.prefab", typeof(GameObject)), new Vector3(-100, -100, -100), Quaternion.identity);
-            //Debug.Log("found a file");
             var mycar = Instantiate(myprevcar, new Vector3(-100 + i*7, -100, -100), Quaternion.identity);
-            if (mycar == null)
-                Debug.Log("car not instantiated");
             mycar.AddComponent<CSVFileReader>();
-            
-            //mycar.GetComponent<CSVFileReader>().csvFile = (TextAsset)AssetDatabase.LoadAssetAtPath(string.Format(template, i), typeof(TextAsset));
-            //mycar.GetComponent<CSVFileReader>().csvFile = (TextAsset)Resources.Load(string.Format(template, i), typeof(TextAsset));
             mycar.GetComponent<CSVFileReader>().csvFile = File.Open(Application.persistentDataPath + string.Format(template, i), FileMode.Open);
             if (mycar.GetComponent<CSVFileReader>().csvFile == null)
-                Debug.Log("file not opened correctly");
-            // add script lights if not already included
+                Debug.Log("Couldn't open recording");
             traffic.Add(mycar);
-            //Debug.Log("no problem here");
             i++;
         }
- 
-
-
     }
 
     private void OnEnable()
@@ -233,10 +212,12 @@ public class CANDataCollector : MonoBehaviour {
         triggerTimeStamp3 = Time.time;
     }
 
-    private string generateFileName()
+    /*
+     * Checks to see what recordings already exist,
+     * and then returns a new filename accordingly. JEC
+     */
+    private string generateFilePath()
     {
-        //string template = "Assets/Scripts/Javier/Recordings/recording{0}.txt";
-        //string template = "AssetsTest2/Resources/JavierResources/Recordings/recording{0}.txt";
         string template = "/recording{0}.txt";
         int i = 1;
         while (File.Exists(Application.persistentDataPath + string.Format(template, i)))
@@ -268,25 +249,61 @@ public class CANDataCollector : MonoBehaviour {
 
     private StreamWriter writer;
     private bool recording = false;
-    private bool leftP;
-    private bool rightP;
+    // left and right paddle are used as indicators
+    private bool leftP = false;
+    private bool rightP = false;
 
+    private float actionPerformedAt = 0f;
+    private string message;
+
+    // Takes care of buttons and messages on screen regarding recordings JEC
     private void OnGUI()
     {
         if (recording)
             GUI.Label(new Rect(Screen.width - 100, Screen.height - 50, 100, 100), "RECORDING");
-        if(GUI.Button(new Rect(Screen.width - 200, 50, 175, 30), "Delete Prev Recording"))
+        if (GUI.Button(new Rect(Screen.width - 200, 50, 175, 30), "Delete Prev Recording"))
         {
-            deletePrevRecording();
+            actionPerformedAt = Time.time;
+            if (!recording)
+            {
+                deletePrevRecording();
+                message = "Succesfully deleted the previous recording.";
+            } else
+            {
+                message = "Cannot delete files while recording.";
+            }
         }
         if (GUI.Button(new Rect(Screen.width - 200, 90, 175, 30), "Delete All Recordings"))
         {
-            deleteAllRecordings();
+            actionPerformedAt = Time.time;
+            if (!recording)
+            {
+                deleteAllRecordings();
+                message = "Succesfully deleted all the recordings.";
+            } else
+            {
+                message = "Cannot delete files while recording";
+            }
         }
-        //GUI.Label(new Rect(Screen.width - 100, 100, 100, 100), string.Format("{0}",Time.time));
+        if (actionPerformedAt > 0f && Time.time < actionPerformedAt + 4f)
+        {
+            GUI.color = new Color(1f, 1f, 1f, Mathf.Clamp01(1 - (Time.time - actionPerformedAt - 3f)));
+            //GUI.Label(new Rect(200, 10, 300, 400), message);
+            GUI.Label(new Rect(Screen.width / 2 - 150, Screen.height / 2, 300, 400), message);
+            GUI.color = Color.white;
+        }
     }
 
+    /* 
+     * All button actions are better handled in Update
+     * because FixedUpdate skips frames occasionaly. JEC
+     */
     void Update() {
+
+        /*
+        * Changes under Edit/Project Settings/Input:
+        * -rightRed is set to joystick button 6 or 'r' JEC
+        */
 
         if (Input.GetButtonDown("rightRed"))
         {
@@ -294,19 +311,31 @@ public class CANDataCollector : MonoBehaviour {
             {
                 recording = false;
                 writer.Close();
-            }
-            else
+            } else
             {
                 recording = true;
-                string path = generateFileName();
+                string path = generateFilePath();
                 writer = File.CreateText(path);
-                //Debug.Log("recording");
             }
         }
 
-        leftP = Input.GetButtonDown("LeftPaddle");
-        rightP = Input.GetButtonDown("RightPaddle");
-        /*
+        if (Input.GetButtonDown("LeftPaddle"))
+        {
+            leftP = !leftP;
+            rightP = false;
+        }
+        if (Input.GetButtonDown("RightPaddle"))
+        {
+            rightP = !rightP;
+            leftP = false;
+        }
+
+        /* 
+         * This was the old function. I have kept it because it is useful 
+         * to see how some information about the car can be accessed.
+         * For instance, if the speed of the car ever needs to be recorded,
+         * this is how it would be done. JEC
+
         float yaw = (transform.localRotation.eulerAngles.y - lastYaw) / Time.deltaTime;
         float roll = (transform.localRotation.eulerAngles.z - lastRoll) / Time.deltaTime;
         lastRoll = transform.localRotation.eulerAngles.z;
@@ -383,50 +412,34 @@ public class CANDataCollector : MonoBehaviour {
             triggerTimeStamp3 = 0f;
         }
 
-
-
-        dataStream.SendAsText(frame);*/
-
+        dataStream.SendAsText(frame);
+        */
     }
-
-
-
-
 
     private void FixedUpdate()
     {
-        //float time = Time.time;
-        //time -= startOfScene;
-
+        /*
+         * It is important to use the time since the level
+         * was loaded as oppoed to the global application time.
+         * This way the cars are in synch with the scene. JEC
+         */
         float time = Time.timeSinceLevelLoad;
 
-
-        // right paddle is button 4
-        //left paddle is button 5
-        // right red button is 6
-        //btter if these are in update()
-
-        //StreamWriter writer = new StreamWriter(path, true);
-
-
-
-        //vehicleController.WheelFL.transform.rotation.x,
-
-
+        // most of these parameters are not being recorded JEC
         FullDataFrame frame = new FullDataFrame()
         {
             time = time,
             cruiseSpeed = 0f,
             rpm = 0f,
             gearPosActual = 0f,
-            gearPosTarget = vehicleController.Gear,
+            gearPosTarget = 0f,
             accelleratorPos = 0f,
             deceleratorPos = 0f,
             rollRate = 0f,
             steeringWheelAngle = 0f,
             vehicleSpeed = 0f,
             vehicleSpeedOverGround = 0f,
-            wheelSpeedFL = vehicleController.WheelFL.rpm * 60,
+            wheelSpeedFL = 0f,
             wheelSpeedFR = vehicleController.WheelFR.rpm * 60,
             wheelSpeedRL = vehicleController.WheelRL.rpm * 60,
             wheelSpeedRR = vehicleController.WheelRR.rpm * 60,
@@ -440,18 +453,13 @@ public class CANDataCollector : MonoBehaviour {
             rotationZ = vehicleController.transform.rotation.z,
             rotationW = vehicleController.transform.rotation.w,
             throttle = vehicleController.accellInput,
-            leftPaddle = leftP,
-            rightPaddle = rightP,
-            localRotationX = vehicleController.WheelFL.transform.localEulerAngles.x,
-            frontLocalRotationY = vehicleController.WheelFL.transform.localEulerAngles.y
+            leftPaddle = leftP ? 1 : 0,
+            rightPaddle = rightP ? 1 : 0
         };
 
         if (recording)
         {
             writer.WriteLine(frame.ToCSV());
-            //AssetDatabase.ImportAsset(path, ImportAssetOptions.Default);
         }
-
-        //dataStream.SendAsText(frame);
     }
 }

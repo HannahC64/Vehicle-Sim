@@ -4,32 +4,39 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
 
+/*
+ * This script should be attached to a car prefab.
+ * It reads the contents of a CSV file and updates
+ * the car accordingly.
+ * 
+ * When a car is instantiated in CANDataCollector,
+ * a CSVFileReader is attached to it through code.
+ */
 public class CSVFileReader : MonoBehaviour
 {
-
-    //public TextAsset csvFile;
     public FileStream csvFile;
     private int index;
     private string[] records;
     private int length;
 
     private ScriptLights lights;
-
     private float startTime;
 
     // Use this for initialization
     void Start()
     {
         index = 0;
-        //records = csvFile.text.Split('\n');
-        string csvFile2 = "";
+        /*
+         * This string uses a lot of memory if the recording is very long.
+         * The way the file is being read can thus be improved.
+         */
+        string fileContents = "";
         using(StreamReader read = new StreamReader(csvFile, true))
         {
-            csvFile2 = read.ReadToEnd();
+            fileContents = read.ReadToEnd();
         }
-
-        records = csvFile2.Split('\n');
-
+        
+        records = fileContents.Split('\n');
         length = records.Length;
 
         lights = GetComponent<ScriptLights>();
@@ -44,12 +51,19 @@ public class CSVFileReader : MonoBehaviour
     {
     }
 
+    /*
+     * FixedUpdate is called in fixed intervals 
+     * More reliabled to do it here because the recording is also
+     * done under FixedUpdate.
+     */
     private void FixedUpdate()
     {
+        // waits to start reading until recording started
         if (startTime < Time.timeSinceLevelLoad)
         {
             readCSV();
             index++;
+            // once the recording is over, this loops back to the beginning
             if (index >= length - 1)
                 index = 0;
         }
@@ -65,20 +79,10 @@ public class CSVFileReader : MonoBehaviour
         Quaternion rot = new Quaternion(float.Parse(fields[4]), float.Parse(fields[5]), float.Parse(fields[6]), float.Parse(fields[7]));
         transform.rotation = rot;
 
+        // if throttle is negative, the braking pedal is being used
         lights.braking = (float.Parse(fields[8]) < 0);
 
-        if ("True".Equals(fields[9])) { }
-            //lights.leftSignalOn = !lights.leftSignalOn;
-
-        if ("True".Equals(fields[10])) { }
-            //lights.rightSignalOn = !lights.rightSignalOn;
-
-        //float newX = float.Parse(fields[11]);
-        //float newY = float.Parse(fields[12]);
-
-        //fl.localRotation = Quaternion.Euler(newX, newY, 0);
-        //fr.localRotation = Quaternion.Euler(newX, newY, 0);
-        //rl.localRotation = Quaternion.Euler(newX, 0, 0);
-        //rr.localRotation = Quaternion.Euler(newX, 0, 0);
+        lights.signalingLeft = (int.Parse(fields[9]) == 1);
+        lights.signalingRight = (int.Parse(fields[10]) == 1);
     }
 }

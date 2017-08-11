@@ -22,8 +22,8 @@ public class IndicatorsAudio : MonoBehaviour {
     {
         /*
          * Changes under Edit/Project Settings/Input:
-         * - RightPaddle is set to joystick button 4
-         * - LeftPaddle is set to joystick button 5
+         * - RightPaddle is set to joystick button 4 or 'o'
+         * - LeftPaddle is set to joystick button 5 or 'p'
          */
 
         bool leftP = Input.GetButtonDown("LeftPaddle");
