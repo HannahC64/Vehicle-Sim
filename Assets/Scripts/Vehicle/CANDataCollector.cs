@@ -46,6 +46,7 @@ public struct FullDataFrame
     public float throttle;
     public int leftPaddle;
     public int rightPaddle;
+    public bool horn;
 
     public string ToCSV()
     {
@@ -66,7 +67,7 @@ public struct FullDataFrame
                 "WheelSpeedReR, {14:F4}, {0}\n" +
                 "YawRate, {15:F4}, {0}\n", time, cruiseSpeed, rpm, gearPosActual, gearPosTarget, accelleratorPos, deceleratorPos, rollRate, steeringWheelAngle, vehicleSpeed, vehicleSpeedOverGround, wheelSpeedFL, wheelSpeedFR, wheelSpeedRL, wheelSpeedRR, yawRate);
         */
-        string data = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}", time, positionX, positionY, positionZ, rotationX, rotationY, rotationZ, rotationW, throttle, leftPaddle, rightPaddle);        
+        string data = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}", time, positionX, positionY, positionZ, rotationX, rotationY, rotationZ, rotationW, throttle, leftPaddle, rightPaddle,horn);        
         
         //TODO: handle this better
         if (triggeredEvent1TimeStamp > 0f)
@@ -165,7 +166,8 @@ public class CANDataCollector : MonoBehaviour {
          * It would be useful to create an array of different
          * prefabs to increase the diversity of models in the scene JEC
          */
-        var myprevcar = (GameObject)Resources.Load("JavierResources/Racing/Racing_Car_05/Prefabs/racing_car_05", typeof(GameObject));
+        var myprevcar = (GameObject)Resources.Load("JavierResources\\Racing\\Police_car\\PREFABS\\police_car_V1_LAPD", typeof(GameObject));
+        Debug.Log(Application.persistentDataPath);
         if (myprevcar == null)
             Debug.Log("Car prefab wasn't found");
         while (File.Exists(Application.persistentDataPath + string.Format(template, i)))
@@ -252,7 +254,7 @@ public class CANDataCollector : MonoBehaviour {
     // left and right paddle are used as indicators
     private bool leftP = false;
     private bool rightP = false;
-
+    private bool bHorn = false;
     private float actionPerformedAt = 0f;
     private string message;
 
@@ -305,7 +307,13 @@ public class CANDataCollector : MonoBehaviour {
         * -rightRed is set to joystick button 6 or 'r' JEC
         */
 
-        if (Input.GetButtonDown("rightRed"))
+        if (Input.GetButtonDown("LeftRed"))
+        {
+            bHorn = true;
+        }
+
+
+        if (Input.GetButtonDown("RightRed"))
         {
             if (recording)
             {
@@ -454,9 +462,11 @@ public class CANDataCollector : MonoBehaviour {
             rotationW = vehicleController.transform.rotation.w,
             throttle = vehicleController.accellInput,
             leftPaddle = leftP ? 1 : 0,
-            rightPaddle = rightP ? 1 : 0
-        };
+            rightPaddle = rightP ? 1 : 0,
+            horn= bHorn ? true: false
 
+        };
+        bHorn = false;
         if (recording)
         {
             writer.WriteLine(frame.ToCSV());

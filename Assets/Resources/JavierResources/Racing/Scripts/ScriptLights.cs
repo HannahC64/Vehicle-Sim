@@ -17,12 +17,13 @@ using System.Collections;
  * it's easier to remember to link the lights which are different
  * in each car model).
  */
-public class ScriptLights : MonoBehaviour {
+public class ScriptLights : MonoBehaviour
+{
 
     public bool braking;
     public bool signalingLeft;
     public bool signalingRight;
-	[Header("Lights")]
+    [Header("Lights")]
     public GameObject backLights;
 
     // indicators i.e. RB: right-back indicator
@@ -35,12 +36,14 @@ public class ScriptLights : MonoBehaviour {
     public Material turnSignalOFF;
 
 
-	void Start () {
+    void Start()
+    {
         backLights.SetActive(false);
     }
-	
 
-	void Update () {
+
+    void Update()
+    {
 
         backLights.SetActive(braking);
 
@@ -57,7 +60,8 @@ public class ScriptLights : MonoBehaviour {
             float emission = floor + Mathf.PingPong(Time.time * 2f, ceiling - floor);
             LB.material.SetColor("_EmissionColor", new Color(1f, 1f, 1f) * emission);
             LF.material.SetColor("_EmissionColor", new Color(1f, 1f, 1f) * emission);
-        } else if (signalingRight)
+        }
+        else if (signalingRight)
         {
             RB.material = turnSignalON;
             RF.material = turnSignalON;
@@ -69,7 +73,8 @@ public class ScriptLights : MonoBehaviour {
             float emission = floor + Mathf.PingPong(Time.time * 2f, ceiling - floor);
             RB.material.SetColor("_EmissionColor", new Color(1f, 1f, 1f) * emission);
             RF.material.SetColor("_EmissionColor", new Color(1f, 1f, 1f) * emission);
-        } else
+        }
+        else
         {
             RB.material = turnSignalOFF;
             RF.material = turnSignalOFF;
@@ -77,8 +82,8 @@ public class ScriptLights : MonoBehaviour {
             LF.material = turnSignalOFF;
         }
 
-		
-	}
+
+    }
 
 
 

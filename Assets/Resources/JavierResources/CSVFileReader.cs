@@ -21,7 +21,7 @@ public class CSVFileReader : MonoBehaviour
 
     private ScriptLights lights;
     private float startTime;
-
+    private ScriptHorn horn;
     // Use this for initialization
     void Start()
     {
@@ -35,11 +35,14 @@ public class CSVFileReader : MonoBehaviour
         {
             fileContents = read.ReadToEnd();
         }
-        
+ 
         records = fileContents.Split('\n');
         length = records.Length;
-
+        horn=GetComponent<ScriptHorn>();
+        horn.beep = false;
+        
         lights = GetComponent<ScriptLights>();
+        Debug.Assert(lights != null);
         lights.braking = false;
 
         string[] fields = records[index].Split(',');
@@ -58,6 +61,7 @@ public class CSVFileReader : MonoBehaviour
      */
     private void FixedUpdate()
     {
+
         // waits to start reading until recording started
         if (startTime < Time.timeSinceLevelLoad)
         {
@@ -84,5 +88,7 @@ public class CSVFileReader : MonoBehaviour
 
         lights.signalingLeft = (int.Parse(fields[9]) == 1);
         lights.signalingRight = (int.Parse(fields[10]) == 1);
+
+        horn.beep = (bool.Parse(fields[11]));
     }
 }
