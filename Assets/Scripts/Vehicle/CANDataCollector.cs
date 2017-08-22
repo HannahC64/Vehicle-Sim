@@ -166,7 +166,7 @@ public class CANDataCollector : MonoBehaviour {
          * It would be useful to create an array of different
          * prefabs to increase the diversity of models in the scene JEC
          */
-        var myprevcar = (GameObject)Resources.Load("JavierResources\\Racing\\Police_car\\PREFABS\\police_car_V1_LAPD", typeof(GameObject));
+        var myprevcar = (GameObject)Resources.Load("JavierResources\\Racing\\Police_Car\\PREFABS\\police_car_V1_LAPD", typeof(GameObject));
         Debug.Log(Application.persistentDataPath);
         if (myprevcar == null)
             Debug.Log("Car prefab wasn't found");
