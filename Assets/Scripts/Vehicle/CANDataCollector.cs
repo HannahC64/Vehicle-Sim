@@ -237,9 +237,15 @@ public class CANDataCollector : MonoBehaviour {
         {
             i++;
         }
+        
         if (i == 1)
             return false;
-        Destroy(traffic[i - 2], 0.1f);
+
+        if (i - 2 < traffic.Count)
+        {
+            Destroy(traffic[i - 2], 0.1f);
+        }
+        
         File.Delete(Application.persistentDataPath + string.Format(template, i - 1));
         return true;
     }

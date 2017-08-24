@@ -20,22 +20,27 @@ public class ViewCollide : MonoBehaviour {
 
     void OnTriggerEnter(Collider c)
     {
-        audioSource.Play();
-       if (reader != null)
+        Debug.Log(c.tag);
+        if (c.tag == "MovingCar" || c.tag == "Player")
         {
-            reader.blocked=true;
-            reader.s = CSVFileReader.step.half;
-            reader.i = 0;
-            reader.decelerate = true;
+            audioSource.Play();
+            if (reader != null)
+            {
+                reader.blocked = true;
+                reader.s = CSVFileReader.step.half;
+                reader.i = 0;
+                reader.decelerate = true;
+            }
         }
-
     }
 
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerExit(Collider c)
     {
-        Debug.Log("Exited");
-        reader.decelerate = false;
-        reader.s = CSVFileReader.step.eigth;
+        if (c.tag == "MovingCar" || c.tag == "Player")
+        {
+            reader.decelerate = false;
+            reader.s = CSVFileReader.step.eigth;
+        }
     }
 
 }
