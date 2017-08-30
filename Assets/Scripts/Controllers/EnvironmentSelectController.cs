@@ -185,7 +185,7 @@ public class EnvironmentSelectController : BaseSelectController {
         StartCoroutine(Functional.WatchFor(() => Vector3.Distance(camMove.transform.localPosition, camInitialPosition) < 3.5f, () =>
         {
             base.OnBack();
-            RemoteAdminController.Instance.SendMessage(RemoteAdminController.SendMessageType.SELECT_CAR, -1);
+            //RemoteAdminController.Instance.SendMessage(RemoteAdminController.SendMessageType.SELECT_CAR, -1);
         }));
         
     }
@@ -333,7 +333,7 @@ public class EnvironmentSelectController : BaseSelectController {
         AudioController.Instance.PlayClip(onConfirm);
         AppController.Instance.currentSessionSettings.selectedEnvironment = choices[currentChoice].environment;
 
-        RemoteAdminController.Instance.SendMessage(RemoteAdminController.SendMessageType.SELECT_SCENE, currentChoice);
+        //RemoteAdminController.Instance.SendMessage(RemoteAdminController.SendMessageType.SELECT_SCENE, currentChoice);
 
         base.OnSelectConfirm();
     }

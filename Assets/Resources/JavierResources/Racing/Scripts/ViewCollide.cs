@@ -20,7 +20,7 @@ public class ViewCollide : MonoBehaviour {
 
     void OnTriggerEnter(Collider c)
     {
-        Debug.Log(c.tag);
+    
         if (c.tag == "MovingCar" || c.tag == "Player")
         {
             audioSource.Play();

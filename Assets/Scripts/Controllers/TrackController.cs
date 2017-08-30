@@ -466,7 +466,7 @@ public class TrackController : UnitySingleton<TrackController> {
   
 
         //short delay before enabling the ipad screen
-        StartCoroutine(Functional.DoAfter(1f, () => RemoteAdminController.Instance.SendMessage(RemoteAdminController.SendMessageType.START_DRIVE_SCENE)));
+        //StartCoroutine(Functional.DoAfter(1f, () => RemoteAdminController.Instance.SendMessage(RemoteAdminController.SendMessageType.START_DRIVE_SCENE)));
     }
 
 

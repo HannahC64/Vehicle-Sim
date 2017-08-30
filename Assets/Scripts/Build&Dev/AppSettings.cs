@@ -132,7 +132,7 @@ public class ProductionAppSettings : DefaultAppSettings
         inputController = typeof(SteeringWheelInputController);
         inputControllerBackup = typeof(KeyboardInputController);
         scaleUi = false;
-        projectorBlend = true;
+        //projectorBlend = true;
         fullscreen = true;
         xResolution = 4992;
     }
@@ -147,7 +147,7 @@ public class SmallAppSettings : DevAppSettings
         : base()
     {
         xResolution = 1920;
-        yResolution = 270;
+        yResolution = 1080;
         fullscreen = false;
     }
 }
@@ -168,7 +168,7 @@ public class SteeringWheelFull : SteeringWheelSettings
 {
     public SteeringWheelFull() : base() {
         xResolution = 5760;
-        yResolution = 1080;
+        yResolution = 2160;
     }
 }
 

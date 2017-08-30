@@ -417,7 +417,7 @@ public class CarSelectController : BaseSelectController
 
                     StartCoroutine(Functional.DoAfter(1.5f, () => base.OnSelectConfirm()));
 
-                    RemoteAdminController.Instance.SendMessage(RemoteAdminController.SendMessageType.SELECT_CAR, currentChoice);
+                    //RemoteAdminController.Instance.SendMessage(RemoteAdminController.SendMessageType.SELECT_CAR, currentChoice);
 
                     Quaternion initalRot = selectedCar.transform.localRotation;
                     Quaternion targetRot = Quaternion.Euler(initalRot.eulerAngles.x, 90f, initalRot.eulerAngles.z);

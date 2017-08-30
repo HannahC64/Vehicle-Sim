@@ -248,7 +248,6 @@ GameObject:
   - component: {fileID: 114830672776127142}
   - component: {fileID: 82687094378114752}
   - component: {fileID: 114358300885866958}
-  - component: {fileID: 114097426673395512}
   m_Layer: 0
   m_Name: police_car_V1_LAPD
   m_TagString: Untagged
@@ -2391,27 +2390,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
---- !u!114 &114097426673395512
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 174976}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f51906e2f04ec744fb1fb2942e6f81c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  braking: 0
-  signalingLeft: 0
-  signalingRight: 0
-  backLights: {fileID: 0}
-  RB: {fileID: 0}
-  LB: {fileID: 0}
-  RF: {fileID: 0}
-  LF: {fileID: 0}
-  turnSignalON: {fileID: 2100000, guid: ab54f97f6b6e8004897030f26681e7d7, type: 2}
-  turnSignalOFF: {fileID: 2100000, guid: 15eb3a673d57c0c42bd8357a2d23fcce, type: 2}
 --- !u!114 &114316546275956134
 MonoBehaviour:
   m_ObjectHideFlags: 1

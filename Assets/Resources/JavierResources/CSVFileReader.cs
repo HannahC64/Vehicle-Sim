@@ -68,7 +68,7 @@ public class CSVFileReader : MonoBehaviour
 
         string[] fields = records[index].Split(',');
         startTime = float.Parse(fields[0]);
-        Debug.Log("hello");
+
     }
 
     // Update is called once per frame
@@ -89,6 +89,7 @@ public class CSVFileReader : MonoBehaviour
         {
            if (blocked == true)
            {
+                //add robustness here
                 switch (s)
                 {
                     // This is triggered by the viewCollide script, which is attached to a collider in front of the car prefab. 
@@ -103,15 +104,14 @@ public class CSVFileReader : MonoBehaviour
                             {
                                 increase[y] = (float.Parse(nextValues[y]) - float.Parse(prevValues[y])) / 8;
                             }
-                            Debug.Log("Increase " + increase[3]);
-                            Debug.Log("Previous " + prevValues[3]);
+
                             placeCar(prevValues);
 
                             i++;
                         }
                         if (i == 8)
                         {
-                            Debug.Log("Final " + nextValues[3]);
+ 
                             placeCar(nextValues);
                             if (decelerate)
                             {
@@ -131,7 +131,6 @@ public class CSVFileReader : MonoBehaviour
                             {
                                 currentValues[z] = (float.Parse(currentValues[z]) + increase[z]).ToString();
                             }
-                            Debug.Log(i + "th " + currentValues[3]);
                             placeCar(currentValues);
                             i++;
                         }
@@ -180,9 +179,7 @@ public class CSVFileReader : MonoBehaviour
                             i++;
                         }
                         break;
-                    case step.half:
-                        Debug.Log("half");
-                        
+                    case step.half:                        
                         if (i == 0)
                         {
                             prevValues = records[index].Split(',');
@@ -224,7 +221,6 @@ public class CSVFileReader : MonoBehaviour
                         }
                         else
                         {
-                            Debug.Log("should never get here");
                             i=0;
                         }
                         
@@ -233,15 +229,22 @@ public class CSVFileReader : MonoBehaviour
                         break;
                     case step.full:
                         //should never happen
-                        Debug.Log("full");
                         blocked = false;
                         break;
                 }
             }
             else
             {
+                Debug.Log(records[index].Split(',').Length);
+                while (records[index].Split(',').Length < 12)
+                {
+                    index++;
+                    if (index >= length - 1)
+                        index = 0;
+                }
                 placeCar(records[index].Split(','));
                 index++;
+
                 // once the recording is over, this loops back to the beginning
                 if (index >= length - 1)
                     index = 0;

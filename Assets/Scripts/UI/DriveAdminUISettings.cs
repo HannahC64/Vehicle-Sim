@@ -91,7 +91,7 @@ public class DriveAdminUISettings : MonoBehaviour
     {
         if (didInit && Time.time - lastRemoteUpdate > remoteUpdateTime)
         {
-            RemoteAdminController.Instance.SendMessageRaw(RemoteAdminController.SendMessageType.REFRESH_STATE, BuildRemoteState());
+            //RemoteAdminController.Instance.SendMessageRaw(RemoteAdminController.SendMessageType.REFRESH_STATE, BuildRemoteState());
             lastRemoteUpdate = Time.time;
         }
 

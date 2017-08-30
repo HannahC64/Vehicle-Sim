@@ -200,7 +200,7 @@ public class RemoteAdminController : PersistentUnitySingleton<RemoteAdminControl
         
 
 
-        Debug.Log("started server");
+
     }
 
     //MOCKS ONLY!
