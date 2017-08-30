@@ -18,7 +18,7 @@ public class CSVFileReader : MonoBehaviour
     private int index;
     private string[] records;
     private int length;
-
+    private int lag;
 
     //These are all values for the collision detection
     private string[] prevValues;
@@ -39,6 +39,7 @@ public class CSVFileReader : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        lag = 0;
         i = 0;
         s = step.full;
         blocked = false;
@@ -53,16 +54,16 @@ public class CSVFileReader : MonoBehaviour
          * The way the file is being read can thus be improved.
          */
         string fileContents = "";
-        using(StreamReader read = new StreamReader(csvFile, true))
+        using (StreamReader read = new StreamReader(csvFile, true))
         {
             fileContents = read.ReadToEnd();
         }
-        
+
         records = fileContents.Split('\n');
         length = records.Length;
-        horn=GetComponent<ScriptHorn>();
+        horn = GetComponent<ScriptHorn>();
         horn.beep = false;
-        
+
         lights = GetComponent<ScriptLights>();
         lights.braking = false;
 
@@ -87,155 +88,169 @@ public class CSVFileReader : MonoBehaviour
         // waits to start reading until recording started
         if (startTime < Time.timeSinceLevelLoad)
         {
-           if (blocked == true)
-           {
-                //add robustness here
-                switch (s)
+            if (blocked == true)
+            {
+                if (index + 1 >= length - 1)
+                    index = 0;
+                if (records[index].Split(',').Length < 12 || records[index + 1].Split(',').Length < 12)
                 {
-                    // This is triggered by the viewCollide script, which is attached to a collider in front of the car prefab. 
-                    // Look at viewCollide for more details
-                    case step.eigth:
-                        if (i == 0)
-                        {
-                            prevValues = records[index].Split(',');
-                            prevValues.CopyTo(currentValues, 0);
-                            nextValues = records[index + 1].Split(',');
-                            for (int y = 1; y < 9; y++)
-                            {
-                                increase[y] = (float.Parse(nextValues[y]) - float.Parse(prevValues[y])) / 8;
-                            }
-
-                            placeCar(prevValues);
-
-                            i++;
-                        }
-                        if (i == 8)
-                        {
- 
-                            placeCar(nextValues);
-                            if (decelerate)
-                            {
-                                s = step.stop;
-                            }
-                            else
-                            {
-                                s = step.quarter;
-                            }
-                            
-                            i = 0;
-                            index++;
-                        }
-                        else
-                        {
-                            for (int z = 1; z < 9; z++)
-                            {
-                                currentValues[z] = (float.Parse(currentValues[z]) + increase[z]).ToString();
-                            }
-                            placeCar(currentValues);
-                            i++;
-                        }
-                        break;
-                    case step.quarter:
-
-                        if (i == 0)
-                        {
-                            
-                            
-                            prevValues = records[index].Split(',');
-                            prevValues.CopyTo(currentValues, 0);
-                            nextValues = records[index + 1].Split(',');
-                            for (int y = 1; y < 9; y++)
-                            {
-                                increase[y] = (float.Parse(nextValues[y]) - float.Parse(prevValues[y])) / 4;
-                            }
-
-                            placeCar(prevValues);
-
-                            i++;
-                        }
-                        if (i == 4)
-                        {
-      
-                            placeCar(nextValues);
-                            if (decelerate)
-                            {
-                                s = step.eigth;
-                            }
-                            else
-                            {
-                                s = step.half;
-                            }
-                            
-                            i = 0;
-                            index++;
-                        }
-                        else
-                        {
-                            for (int z=1; z<9; z++)
-                            {
-                                currentValues[z] = (float.Parse(currentValues[z]) + increase[z]).ToString();
-                            }
-                            placeCar(currentValues);
-                            i++;
-                        }
-                        break;
-                    case step.half:                        
-                        if (i == 0)
-                        {
-                            prevValues = records[index].Split(',');
-                            nextValues = records[index+1].Split(',');
-                            for (int x = 1; x < 9; x++)
-                            {
-                                currentValues[x] = ((float.Parse(prevValues[x]) + float.Parse(nextValues[x]) )/ 2).ToString();
-                            }
-                            currentValues[9] = prevValues[9];
-                            currentValues[10] = prevValues[10];
-                            currentValues[11] = false.ToString();
-                            placeCar(prevValues);
-
-                            i++;
-                            
-                        }
-                        else if (i == 1)
-                        {
-                            
-                            placeCar(currentValues);
-                            i++;
-                        }
-                        else if (i == 2)
-                        {
-                            
-                            placeCar(nextValues);
-                            if (decelerate)
-                            {
-                                s = step.quarter;
-                            }
-                            else
-                            {
-                                blocked = false;
-                                s = step.full;
-                            }
-                            
-                            index++;
-                            i = 0;
-                        }
-                        else
-                        {
-                            i=0;
-                        }
-                        
-                        break;
-                    case step.stop:
-                        break;
-                    case step.full:
-                        //should never happen
-                        blocked = false;
-                        break;
+                    index++;
                 }
+                else
+                {
+
+                    switch (s)
+                    {
+                        // This is triggered by the viewCollide script, which is attached to a collider in front of the car prefab. 
+                        // Look at viewCollide for more details
+                        case step.eigth:
+                            if (i == 0)
+                            {
+                                prevValues = records[index].Split(',');
+                                prevValues.CopyTo(currentValues, 0);
+                                nextValues = records[index + 1].Split(',');
+                                for (int y = 1; y < 9; y++)
+                                {
+                                    increase[y] = (float.Parse(nextValues[y]) - float.Parse(prevValues[y])) / 8;
+                                }
+
+                                placeCar(prevValues);
+
+                                i++;
+                            }
+                            if (i == 8)
+                            {
+
+                                placeCar(nextValues);
+                                if (decelerate)
+                                {
+                                    s = step.stop;
+                                }
+                                else
+                                {
+                                    s = step.quarter;
+                                }
+
+                                i = 0;
+                                index++;
+                                lag--;
+                            }
+                            else
+                            {
+                                for (int z = 1; z < 9; z++)
+                                {
+                                    currentValues[z] = (float.Parse(currentValues[z]) + increase[z]).ToString();
+                                }
+                                placeCar(currentValues);
+                                i++;
+                            }
+                            break;
+                        case step.quarter:
+
+                            if (i == 0)
+                            {
+
+
+                                prevValues = records[index].Split(',');
+                                prevValues.CopyTo(currentValues, 0);
+                                nextValues = records[index + 1].Split(',');
+                                for (int y = 1; y < 9; y++)
+                                {
+                                    increase[y] = (float.Parse(nextValues[y]) - float.Parse(prevValues[y])) / 4;
+                                }
+
+                                placeCar(prevValues);
+
+                                i++;
+                            }
+                            if (i == 4)
+                            {
+
+                                placeCar(nextValues);
+                                if (decelerate)
+                                {
+                                    s = step.eigth;
+                                }
+                                else
+                                {
+                                    s = step.half;
+                                }
+
+                                i = 0;
+                                index++;
+                                lag--;
+                            }
+                            else
+                            {
+                                for (int z = 1; z < 9; z++)
+                                {
+                                    currentValues[z] = (float.Parse(currentValues[z]) + increase[z]).ToString();
+                                }
+                                placeCar(currentValues);
+                                i++;
+                            }
+                            break;
+                        case step.half:
+                            if (i == 0)
+                            {
+                                prevValues = records[index].Split(',');
+                                nextValues = records[index + 1].Split(',');
+                                for (int x = 1; x < 9; x++)
+                                {
+                                    currentValues[x] = ((float.Parse(prevValues[x]) + float.Parse(nextValues[x])) / 2).ToString();
+                                }
+                                currentValues[9] = prevValues[9];
+                                currentValues[10] = prevValues[10];
+                                currentValues[11] = false.ToString();
+                                placeCar(prevValues);
+
+                                i++;
+
+                            }
+                            else if (i == 1)
+                            {
+
+                                placeCar(currentValues);
+                                i++;
+                            }
+                            else if (i == 2)
+                            {
+
+                                placeCar(nextValues);
+                                if (decelerate)
+                                {
+                                    s = step.quarter;
+                                }
+                                else
+                                {
+                                    blocked = false;
+                                    s = step.full;
+                                }
+
+                                index++;
+                                lag--;
+                                i = 0;
+                            }
+                            else
+                            {
+                                i = 0;
+                            }
+
+                            break;
+                        case step.stop:
+                            break;
+                        case step.full:
+                            //should never happen
+                            blocked = false;
+                            break;
+                    }
+                }
+                //lag increases for each frame it gets behind on the recording
+                lag++;
             }
             else
             {
-                Debug.Log(records[index].Split(',').Length);
+
                 while (records[index].Split(',').Length < 12)
                 {
                     index++;
@@ -244,12 +259,25 @@ public class CSVFileReader : MonoBehaviour
                 }
                 placeCar(records[index].Split(','));
                 index++;
+                if (lag > 0)
+                {
+                    //goes at double speed to catch up with where it should be
+                    index++;
+                    lag--;
+                }
+                if (lag > 50)
+                {
+                    // goes at quadruple speed if particularly far behind
+                    index++;
+                    lag--;
+                }
 
                 // once the recording is over, this loops back to the beginning
                 if (index >= length - 1)
                     index = 0;
-            }
 
+            }
+            
         }
     }
 
