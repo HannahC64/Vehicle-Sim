@@ -180,6 +180,15 @@ public class CANDataCollector : MonoBehaviour {
             traffic.Add(mycar);
             i++;
         }
+        //
+        var leadCar = (GameObject)Resources.Load("JavierResources\\Racing\\Racing_Car_05\\Prefabs\\racing_car_05", typeof(GameObject));
+        if (leadCar == null)
+            Debug.Log("leadCar prefab wasn't found");
+        if (File.Exists(Application.persistentDataPath + "/leader.txt")){
+            var leader = Instantiate(leadCar, new Vector3(-100 + i * 7, -100, -100), Quaternion.identity);
+            leader.AddComponent<CSVFileReader>();
+            leader.GetComponent<CSVFileReader>().csvFile = File.Open(Application.persistentDataPath + "/leader.txt", FileMode.Open);
+        }
     }
 
     private void OnEnable()

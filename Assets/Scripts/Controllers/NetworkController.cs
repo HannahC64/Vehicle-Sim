@@ -109,7 +109,9 @@ public class NetworkController : PersistentUnitySingleton<NetworkController> {
 
     public void Update()
     {
-        if (!isMaster && Input.GetKeyDown(KeyCode.Escape)) {
+        //if (!isMaster && Input.GetKeyDown(KeyCode.Escape)) {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
             Application.Quit();
         }
     }

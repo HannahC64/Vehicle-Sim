@@ -265,12 +265,6 @@ public class CSVFileReader : MonoBehaviour
                     index++;
                     lag--;
                 }
-                if (lag > 50)
-                {
-                    // goes at quadruple speed if particularly far behind
-                    index++;
-                    lag--;
-                }
 
                 // once the recording is over, this loops back to the beginning
                 if (index >= length - 1)

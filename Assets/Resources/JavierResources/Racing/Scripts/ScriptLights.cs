@@ -27,18 +27,24 @@ public class ScriptLights : MonoBehaviour
     public GameObject backLights;
 
     // indicators i.e. RB: right-back indicator
-    public Renderer RB;
-    public Renderer LB;
-    public Renderer RF;
-    public Renderer LF;
 
-    public Material turnSignalON;
-    public Material turnSignalOFF;
+    public Light RBLight;
+    public Light LBLight;
+    public Light RFLight;
+    public Light LFLight;
 
+    private float ceiling;
+    private float floor;
 
     void Start()
     {
+        ceiling = 70;
+        floor = 0;
         backLights.SetActive(false);
+        RBLight.intensity=floor;
+        LBLight.intensity = floor;
+        RFLight.intensity = floor;
+        LFLight.intensity = floor;
     }
 
 
@@ -49,37 +55,33 @@ public class ScriptLights : MonoBehaviour
 
         if (signalingLeft)
         {
-            LB.material = turnSignalON;
-            LF.material = turnSignalON;
-            RB.material = turnSignalOFF;
-            RF.material = turnSignalOFF;
+            RBLight.intensity=floor;
+            RFLight.intensity = floor;
 
             // makes the indicator flicker
-            float floor = 0f;
-            float ceiling = 1f;
-            float emission = floor + Mathf.PingPong(Time.time * 2f, ceiling - floor);
-            LB.material.SetColor("_EmissionColor", new Color(1f, 1f, 1f) * emission);
-            LF.material.SetColor("_EmissionColor", new Color(1f, 1f, 1f) * emission);
+
+            float emission = floor + Mathf.PingPong(Time.time * 60f, ceiling - floor);
+            LBLight.intensity = emission;
+            LFLight.intensity = emission;
         }
         else if (signalingRight)
         {
-            RB.material = turnSignalON;
-            RF.material = turnSignalON;
-            LB.material = turnSignalOFF;
-            LF.material = turnSignalOFF;
+            LBLight.intensity = floor;
+            LFLight.intensity = floor;
 
-            float floor = 0f;
-            float ceiling = 1f;
-            float emission = floor + Mathf.PingPong(Time.time * 2f, ceiling - floor);
-            RB.material.SetColor("_EmissionColor", new Color(1f, 1f, 1f) * emission);
-            RF.material.SetColor("_EmissionColor", new Color(1f, 1f, 1f) * emission);
+
+
+            float emission = floor + Mathf.PingPong(Time.time * 60f, ceiling - floor);
+            RBLight.intensity = emission;
+           
+            RFLight.intensity = emission;
         }
         else
         {
-            RB.material = turnSignalOFF;
-            RF.material = turnSignalOFF;
-            LB.material = turnSignalOFF;
-            LF.material = turnSignalOFF;
+            RBLight.intensity = floor;
+            LBLight.intensity = floor;
+            RFLight.intensity = floor;
+            LFLight.intensity = floor;
         }
 
 

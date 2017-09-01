@@ -23,7 +23,7 @@ public class ViewCollide : MonoBehaviour {
     
         if (c.tag == "MovingCar" || c.tag == "Player")
         {
-            audioSource.Play();
+            //audioSource.Play();
             if (reader != null)
             {
                 reader.blocked = true;
