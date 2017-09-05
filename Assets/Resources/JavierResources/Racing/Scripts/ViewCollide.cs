@@ -30,6 +30,7 @@ public class ViewCollide : MonoBehaviour {
                 reader.s = CSVFileReader.step.half;
                 reader.i = 0;
                 reader.decelerate = true;
+                reader.slow = 50;
             }
         }
     }
@@ -39,7 +40,7 @@ public class ViewCollide : MonoBehaviour {
         if (c.tag == "MovingCar" || c.tag == "Player")
         {
             reader.decelerate = false;
-            reader.s = CSVFileReader.step.eigth;
+            reader.s = CSVFileReader.step.thirtysecondth;
         }
     }
 

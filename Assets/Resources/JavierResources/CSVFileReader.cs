@@ -25,11 +25,13 @@ public class CSVFileReader : MonoBehaviour
     private string[] nextValues;
     private string[] currentValues;
     private float[] increase;
-    public enum step { half, quarter, eigth, full, stop };
+    public enum step { half, quarter, eigth, sixteenth, thirtysecondth, full, stop };
     public step s; //step is the fractional increase for each case
     public int i;
     public bool blocked;//true if another car is in this car's collision
     public bool decelerate;//true for slowing down, false for speeding up after collision ends
+    public int slow;
+
 
     private ScriptLights lights;
     private float startTime;
@@ -49,6 +51,8 @@ public class CSVFileReader : MonoBehaviour
         nextValues = new string[12];
         currentValues = new string[12];
         increase = new float[9];
+        slow = 0;
+       
         /*
          * This string uses a lot of memory if the recording is very long.
          * The way the file is being read can thus be improved.
@@ -103,139 +107,21 @@ public class CSVFileReader : MonoBehaviour
                     {
                         // This is triggered by the viewCollide script, which is attached to a collider in front of the car prefab. 
                         // Look at viewCollide for more details
+                        case step.thirtysecondth:
+                            stepHandle(32);
+                            break;
+                        case step.sixteenth:
+                            stepHandle(16);
+                            break;
                         case step.eigth:
-                            if (i == 0)
-                            {
-                                prevValues = records[index].Split(',');
-                                prevValues.CopyTo(currentValues, 0);
-                                nextValues = records[index + 1].Split(',');
-                                for (int y = 1; y < 9; y++)
-                                {
-                                    increase[y] = (float.Parse(nextValues[y]) - float.Parse(prevValues[y])) / 8;
-                                }
-
-                                placeCar(prevValues);
-
-                                i++;
-                            }
-                            if (i == 8)
-                            {
-
-                                placeCar(nextValues);
-                                if (decelerate)
-                                {
-                                    s = step.stop;
-                                }
-                                else
-                                {
-                                    s = step.quarter;
-                                }
-
-                                i = 0;
-                                index++;
-                                lag--;
-                            }
-                            else
-                            {
-                                for (int z = 1; z < 9; z++)
-                                {
-                                    currentValues[z] = (float.Parse(currentValues[z]) + increase[z]).ToString();
-                                }
-                                placeCar(currentValues);
-                                i++;
-                            }
+                            stepHandle(8);
                             break;
                         case step.quarter:
 
-                            if (i == 0)
-                            {
-
-
-                                prevValues = records[index].Split(',');
-                                prevValues.CopyTo(currentValues, 0);
-                                nextValues = records[index + 1].Split(',');
-                                for (int y = 1; y < 9; y++)
-                                {
-                                    increase[y] = (float.Parse(nextValues[y]) - float.Parse(prevValues[y])) / 4;
-                                }
-
-                                placeCar(prevValues);
-
-                                i++;
-                            }
-                            if (i == 4)
-                            {
-
-                                placeCar(nextValues);
-                                if (decelerate)
-                                {
-                                    s = step.eigth;
-                                }
-                                else
-                                {
-                                    s = step.half;
-                                }
-
-                                i = 0;
-                                index++;
-                                lag--;
-                            }
-                            else
-                            {
-                                for (int z = 1; z < 9; z++)
-                                {
-                                    currentValues[z] = (float.Parse(currentValues[z]) + increase[z]).ToString();
-                                }
-                                placeCar(currentValues);
-                                i++;
-                            }
+                            stepHandle(4);
                             break;
                         case step.half:
-                            if (i == 0)
-                            {
-                                prevValues = records[index].Split(',');
-                                nextValues = records[index + 1].Split(',');
-                                for (int x = 1; x < 9; x++)
-                                {
-                                    currentValues[x] = ((float.Parse(prevValues[x]) + float.Parse(nextValues[x])) / 2).ToString();
-                                }
-                                currentValues[9] = prevValues[9];
-                                currentValues[10] = prevValues[10];
-                                currentValues[11] = false.ToString();
-                                placeCar(prevValues);
-
-                                i++;
-
-                            }
-                            else if (i == 1)
-                            {
-
-                                placeCar(currentValues);
-                                i++;
-                            }
-                            else if (i == 2)
-                            {
-
-                                placeCar(nextValues);
-                                if (decelerate)
-                                {
-                                    s = step.quarter;
-                                }
-                                else
-                                {
-                                    blocked = false;
-                                    s = step.full;
-                                }
-
-                                index++;
-                                lag--;
-                                i = 0;
-                            }
-                            else
-                            {
-                                i = 0;
-                            }
-
+                            stepHandle(2);
                             break;
                         case step.stop:
                             break;
@@ -257,15 +143,33 @@ public class CSVFileReader : MonoBehaviour
                     if (index >= length - 1)
                         index = 0;
                 }
-                placeCar(records[index].Split(','));
-                index++;
-                if (lag > 0)
+
+
+                prevValues = records[index].Split(',');
+                nextValues = records[index + 1].Split(',');
+                while ( prevValues[1]==nextValues[1] && prevValues[2] == nextValues[2] && prevValues[3] == nextValues[3] && lag >1)
                 {
+
+                        index++;
+                        lag--;
+                        prevValues = records[index].Split(',');
+                        nextValues = records[index + 1].Split(',');
+                }
+                if (lag > 0 && slow == 0)
+                {
+
+
                     //goes at double speed to catch up with where it should be
                     index++;
                     lag--;
                 }
+                placeCar(records[index].Split(','));
+                index++;
 
+                if (slow > 0)
+                {
+                    slow--;
+                }
                 // once the recording is over, this loops back to the beginning
                 if (index >= length - 1)
                     index = 0;
@@ -274,6 +178,88 @@ public class CSVFileReader : MonoBehaviour
             
         }
     }
+
+    void stepHandle(int fraction)
+    {
+
+        if (i == 0)
+        {
+
+
+            prevValues = records[index].Split(',');
+            prevValues.CopyTo(currentValues, 0);
+            nextValues = records[index + 1].Split(',');
+            for (int y = 1; y < 9; y++)
+            {
+                increase[y] = (float.Parse(nextValues[y]) - float.Parse(prevValues[y])) / fraction;
+            }
+
+            placeCar(prevValues);
+
+            i++;
+        }
+        if (i == fraction)
+        {
+
+            placeCar(nextValues);
+            if (decelerate)
+            {
+                if (s == step.half)
+                {
+                    s = step.quarter;
+                }else if (s == step.quarter)
+                {
+                    s = step.eigth;
+                }else if (s == step.eigth)
+                {
+                    s = step.sixteenth;
+                
+                }else if (s == step.sixteenth)
+                {
+                    s = step.thirtysecondth;
+                }else if (s == step.thirtysecondth)
+                {
+                    s = step.stop;
+                }
+                
+            }
+            else
+            {
+                if (s == step.half)
+                {
+                    s = step.full;
+                    blocked = false;
+                }
+                if (s == step.quarter)
+                {
+                    s = step.half;
+                }else if (s == step.eigth)
+                {
+                    s = step.quarter;
+                }else if (s == step.sixteenth)
+                {
+                    s = step.eigth;
+                }else if (s == step.thirtysecondth)
+                {
+                    s = step.sixteenth;
+                }
+            }
+
+            i = 0;
+            index++;
+            lag--;
+        }
+        else
+        {
+            for (int z = 1; z < 9; z++)
+            {
+                currentValues[z] = (float.Parse(currentValues[z]) + increase[z]).ToString();
+            }
+            placeCar(currentValues);
+            i++;
+        }
+    }
+
 
     void placeCar(string[] fields)
     {

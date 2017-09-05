@@ -33,12 +33,14 @@ public class ScriptLights : MonoBehaviour
     public Light RFLight;
     public Light LFLight;
 
-    private float ceiling;
+    private float ceilingF;
+    private float ceilingB;
     private float floor;
 
     void Start()
     {
-        ceiling = 70;
+        ceilingB = 30;
+        ceilingF = 70;
         floor = 0;
         backLights.SetActive(false);
         RBLight.intensity=floor;
@@ -60,21 +62,20 @@ public class ScriptLights : MonoBehaviour
 
             // makes the indicator flicker
 
-            float emission = floor + Mathf.PingPong(Time.time * 60f, ceiling - floor);
-            LBLight.intensity = emission;
-            LFLight.intensity = emission;
+            float emissionF = floor + Mathf.PingPong(Time.time * 80f, ceilingF - floor);
+            float emissionB = floor + Mathf.PingPong(Time.time * 80f, ceilingB - floor);
+            LBLight.intensity = emissionB;
+            LFLight.intensity = emissionF;
         }
         else if (signalingRight)
         {
             LBLight.intensity = floor;
             LFLight.intensity = floor;
 
-
-
-            float emission = floor + Mathf.PingPong(Time.time * 60f, ceiling - floor);
-            RBLight.intensity = emission;
-           
-            RFLight.intensity = emission;
+            float emissionF = floor + Mathf.PingPong(Time.time * 80f, ceilingF - floor);
+            float emissionB = floor + Mathf.PingPong(Time.time * 80f, ceilingB - floor);
+            RBLight.intensity = emissionB;
+            RFLight.intensity = emissionF;
         }
         else
         {
@@ -84,10 +85,6 @@ public class ScriptLights : MonoBehaviour
             LFLight.intensity = floor;
         }
 
-
     }
-
-
-
 
 }
