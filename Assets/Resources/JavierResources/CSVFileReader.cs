@@ -137,23 +137,34 @@ public class CSVFileReader : MonoBehaviour
             else
             {
 
-                while (records[index].Split(',').Length < 12)
+                while (records[index].Split(',').Length < 12||records[index+1].Split(',').Length<12)
                 {
                     index++;
-                    if (index >= length - 1)
+                    if (index >= length-1)
                         index = 0;
                 }
 
 
                 prevValues = records[index].Split(',');
+
                 nextValues = records[index + 1].Split(',');
                 while ( prevValues[1]==nextValues[1] && prevValues[2] == nextValues[2] && prevValues[3] == nextValues[3] && lag >1)
                 {
 
                         index++;
                         lag--;
-                        prevValues = records[index].Split(',');
-                        nextValues = records[index + 1].Split(',');
+                    if (index >= length-1)
+                        index = 0;
+                    while (records[index].Split(',').Length < 12 || records[index + 1].Split(',').Length < 12)
+                    {
+                        index++;
+                        if (index >= length-1)
+                            index = 0;
+                    }
+                    prevValues = records[index].Split(',');
+                    nextValues = records[index + 1].Split(',');
+
+   
                 }
                 if (lag > 0 && slow == 0)
                 {
@@ -162,6 +173,8 @@ public class CSVFileReader : MonoBehaviour
                     //goes at double speed to catch up with where it should be
                     index++;
                     lag--;
+                    if (index >= length-1)
+                        index = 0;
                 }
                 placeCar(records[index].Split(','));
                 index++;
@@ -171,7 +184,7 @@ public class CSVFileReader : MonoBehaviour
                     slow--;
                 }
                 // once the recording is over, this loops back to the beginning
-                if (index >= length - 1)
+                if (index >= length-1)
                     index = 0;
 
             }
