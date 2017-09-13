@@ -40,7 +40,12 @@ public class ViewCollide : MonoBehaviour {
         if (c.tag == "MovingCar" || c.tag == "Player")
         {
             reader.decelerate = false;
-            reader.s = CSVFileReader.step.thirtysecondth;
+            if (reader.s == CSVFileReader.step.stop)
+            {
+                reader.i = 0;
+                reader.s = CSVFileReader.step.thirtysecondth;
+            }
+            
         }
     }
 

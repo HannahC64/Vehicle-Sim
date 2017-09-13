@@ -129,7 +129,7 @@ public class CANDataCollector : MonoBehaviour {
 	private Rigidbody rb;
 	private VehicleController vehicleController;
 
-    private DataStreamServer dataStream;
+    //private DataStreamServer dataStream;
 
     public const float sendRate = 0.1f;
     private float lastSend = 0f;
@@ -148,7 +148,7 @@ public class CANDataCollector : MonoBehaviour {
     void Awake() {
 		rb = GetComponent<Rigidbody>();
 		vehicleController = GetComponent<VehicleController>();
-        dataStream = DataStreamServer.Instance;
+        //dataStream = DataStreamServer.Instance;
         lastYaw = transform.localRotation.eulerAngles.y;
         lastRoll = transform.localRotation.eulerAngles.z;
         DriverCamera driverCam = GetComponent<DriverCamera>();
@@ -191,7 +191,7 @@ public class CANDataCollector : MonoBehaviour {
         }
     }
 
-    private void OnEnable()
+    /*
     {
         AppController.Instance.AdminInput.DataStreamEvent1 += OnTriggerEvent1;
         AppController.Instance.AdminInput.DataStreamEvent2 += OnTriggerEvent2;
@@ -221,8 +221,8 @@ public class CANDataCollector : MonoBehaviour {
     void OnTriggerEvent3()
     {
         triggerTimeStamp3 = Time.time;
-    }
-
+    }*/
+   
     /*
      * Checks to see what recordings already exist,
      * and then returns a new filename accordingly. JEC

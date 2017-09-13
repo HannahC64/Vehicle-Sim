@@ -164,7 +164,6 @@ public class CSVFileReader : MonoBehaviour
                     prevValues = records[index].Split(',');
                     nextValues = records[index + 1].Split(',');
 
-   
                 }
                 if (lag > 0 && slow == 0)
                 {

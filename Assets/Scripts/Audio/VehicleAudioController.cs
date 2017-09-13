@@ -83,6 +83,7 @@ public class VehicleAudioController : MonoBehaviour {
 
     void OnCollisionEnter(Collision collision)
     {
+        Debug.Log(collision.gameObject.name);
         collisionAudio.PlayCollision(collision.contacts[0].point, collision.relativeVelocity.magnitude);       
     }
 
