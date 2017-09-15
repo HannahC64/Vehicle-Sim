@@ -170,11 +170,11 @@ public class CANDataCollector : MonoBehaviour {
         Debug.Log(Application.persistentDataPath);
         if (myprevcar == null)
             Debug.Log("Car prefab wasn't found");
-        while (File.Exists(Application.persistentDataPath + string.Format(template, i)))
+        while (File.Exists("C:\\dev\\genivi-vehicle-simulator\\DataCollectionExperiment\\" + string.Format(template, i)))
         {
             var mycar = Instantiate(myprevcar, new Vector3(-100 + i*7, -100, -100), Quaternion.identity);
             mycar.AddComponent<CSVFileReader>();
-            mycar.GetComponent<CSVFileReader>().csvFile = File.Open(Application.persistentDataPath + string.Format(template, i), FileMode.Open);
+            mycar.GetComponent<CSVFileReader>().csvFile = File.Open("C:\\dev\\genivi-vehicle-simulator\\DataCollectionExperiment\\" + string.Format(template, i), FileMode.Open);
             if (mycar.GetComponent<CSVFileReader>().csvFile == null)
                 Debug.Log("Couldn't open recording");
             traffic.Add(mycar);
@@ -184,10 +184,10 @@ public class CANDataCollector : MonoBehaviour {
         var leadCar = (GameObject)Resources.Load("JavierResources\\Racing\\Racing_Car_05\\Prefabs\\racing_car_05", typeof(GameObject));
         if (leadCar == null)
             Debug.Log("leadCar prefab wasn't found");
-        if (File.Exists(Application.persistentDataPath + "/leader.txt")){
+        if (File.Exists("C:\\dev\\genivi-vehicle-simulator\\DataCollectionExperiment\\" + "/leader.txt")){
             var leader = Instantiate(leadCar, new Vector3(-100 + i * 7, -100, -100), Quaternion.identity);
             leader.AddComponent<CSVFileReader>();
-            leader.GetComponent<CSVFileReader>().csvFile = File.Open(Application.persistentDataPath + "/leader.txt", FileMode.Open);
+            leader.GetComponent<CSVFileReader>().csvFile = File.Open("C:\\dev\\genivi-vehicle-simulator\\DataCollectionExperiment\\" + "/leader.txt", FileMode.Open);
         }
     }
 
@@ -231,18 +231,18 @@ public class CANDataCollector : MonoBehaviour {
     {
         string template = "/recording{0}.txt";
         int i = 1;
-        while (File.Exists(Application.persistentDataPath + string.Format(template, i)))
+        while (File.Exists("C:\\dev\\genivi-vehicle-simulator\\DataCollectionExperiment\\" + string.Format(template, i)))
         {
             i++;
         }
-        return Application.persistentDataPath + string.Format(template, i);
+        return "C:\\dev\\genivi-vehicle-simulator\\DataCollectionExperiment\\" + string.Format(template, i);
     }
 
     private bool deletePrevRecording()
     {
         string template = "/recording{0}.txt";
         int i = 1;
-        while (File.Exists(Application.persistentDataPath + string.Format(template, i)))
+        while (File.Exists("C:\\dev\\genivi-vehicle-simulator\\DataCollectionExperiment\\" + string.Format(template, i)))
         {
             i++;
         }
@@ -255,7 +255,7 @@ public class CANDataCollector : MonoBehaviour {
             Destroy(traffic[i - 2], 0.1f);
         }
         
-        File.Delete(Application.persistentDataPath + string.Format(template, i - 1));
+        File.Delete("C:\\dev\\genivi-vehicle-simulator\\DataCollectionExperiment\\" + string.Format(template, i - 1));
         return true;
     }
 
@@ -278,7 +278,7 @@ public class CANDataCollector : MonoBehaviour {
     {
         if (recording)
             GUI.Label(new Rect(Screen.width - 100, Screen.height - 50, 100, 100), "RECORDING");
-        if (GUI.Button(new Rect(Screen.width - 200, 50, 175, 30), "Delete Prev Recording"))
+        /*if (GUI.Button(new Rect(Screen.width - 200, 50, 175, 30), "Delete Prev Recording"))
         {
             actionPerformedAt = Time.time;
             if (!recording)
@@ -302,6 +302,7 @@ public class CANDataCollector : MonoBehaviour {
                 message = "Cannot delete files while recording";
             }
         }
+        */
         if (actionPerformedAt > 0f && Time.time < actionPerformedAt + 4f)
         {
             GUI.color = new Color(1f, 1f, 1f, Mathf.Clamp01(1 - (Time.time - actionPerformedAt - 3f)));

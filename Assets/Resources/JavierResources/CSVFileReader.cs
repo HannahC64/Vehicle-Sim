@@ -150,7 +150,7 @@ public class CSVFileReader : MonoBehaviour
                 nextValues = records[index + 1].Split(',');
                 while ( prevValues[1]==nextValues[1] && prevValues[2] == nextValues[2] && prevValues[3] == nextValues[3] && lag >1)
                 {
-
+                    // Checks to see if car is stationary and lagging, and if so, will skip the stationary lines. (Stops lagging cars from stopping unnecessarily at light)
                         index++;
                         lag--;
                     if (index >= length-1)
